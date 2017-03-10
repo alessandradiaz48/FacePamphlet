@@ -1,136 +1,96 @@
 /*
- * File: FacePamphletCanvas.java
- * -----------------------------
- * This class represents the canvas on which the profiles in the social
- * network are displayed.  NOTE: This class does NOT need to update the
- * display when the window is resized.
+ * File: FacePamphletConstants.java
+ * --------------------------------
+ * This file declares several constants that are shared by the
+ * different modules in the FacePamphlet application.  Any class
+ * that implements this interface can use these constants.
  */
 
-import acm.graphics.*;
-import java.awt.*;
-import java.util.*;
+public interface FacePamphletConstants {
 
-public class FacePamphletCanvas extends GCanvas implements
-		FacePamphletConstants {
+	/** The width of the application window */
+	public static final int APPLICATION_WIDTH = 800;
 
-	/**
-	 * Constructor This method takes care of any initialization needed for the
-	 * display
-	 */
-	public FacePamphletCanvas() {
-	}
+	/** The height of the application window */
+	public static final int APPLICATION_HEIGHT = 500;
+
+	/** Number of characters for each of the text input fields */
+	public static final int TEXT_FIELD_SIZE = 15;
 
 	/**
-	 * This method displays a message string near the bottom of the canvas.
-	 * Every time this method is called, the previously displayed message (if
-	 * any) is replaced by the new message text passed in.
+	 * Text to be used to create an "empty" label to put space between
+	 * interactors on EAST border of application. Note this label is not
+	 * actually the empty string, but rather a single space
 	 */
-	public void showMessage(String msg) {
-		GLabel message = new GLabel(msg);
-		message.setFont(MESSAGE_FONT);
-		add(message, (getWidth() - message.getWidth()) / 2, getHeight()
-				- BOTTOM_MESSAGE_MARGIN);
-	}
+	public static final String EMPTY_LABEL_TEXT = " ";
 
 	/**
-	 * This method displays the given profile on the canvas. The canvas is first
-	 * cleared of all existing items (including messages displayed near the
-	 * bottom of the screen) and then the given profile is displayed. The
-	 * profile display includes the name of the user from the profile, the
-	 * corresponding image (or an indication that an image does not exist), the
-	 * status of the user, and a list of the user's friends in the social
-	 * network.
+	 * Name of font used to display the application message at the bottom of the
+	 * display canvas
 	 */
-	public void displayProfile(FacePamphletProfile profile) {
-		displayName(profile);
-		// The Y coordinate for the image, created so that it may be used in
-		// relation to the location of other objects
-		double yCoorRect = TOP_MARGIN + displayName(profile).getHeight()
-				+ IMAGE_MARGIN;
-		displayImage(profile, yCoorRect);
-		displayStatus(profile, yCoorRect);
-		displayFriends(profile, yCoorRect);
-	}
+	public static final String MESSAGE_FONT = "Dialog-18";
+
+	/** Name of font used to display the name in a user's profile */
+	public static final String PROFILE_NAME_FONT = "Dialog-24";
 
 	/**
-	 * This method creates the label that displays the name of the current
-	 * profile.
+	 * Name of font used to display the text "No Image" in user profiles that do
+	 * not contain an actual image
 	 */
-	private GLabel displayName(FacePamphletProfile profile) {
-		GLabel name = new GLabel(profile.getName());
-		name.setFont(PROFILE_NAME_FONT);
-		name.setColor(Color.BLUE);
-		double yCoor = TOP_MARGIN + name.getHeight();
-		add(name, LEFT_MARGIN, yCoor);
-		return name;
-	}
+	public static final String PROFILE_IMAGE_FONT = "Dialog-24";
+
+	/** Name of font used to display the status in a user's profile */
+	public static final String PROFILE_STATUS_FONT = "Dialog-16-bold";
 
 	/**
-	 * This method displays the profile image for the current profile. If not
-	 * image has been assigned, then a blank rectangle is displayed with the
-	 * message "No Image." If an image has been chosen, then it is displayed as
-	 * the profile image.
+	 * Name of font used to display the label "Friends" above the user's list of
+	 * friends in a profile
 	 */
-	private void displayImage(FacePamphletProfile profile, double yCoorRect) {
-		if (profile.getImage() == null) {
-			GRect imageSpace = new GRect(IMAGE_WIDTH, IMAGE_HEIGHT);
-			add(imageSpace, LEFT_MARGIN, yCoorRect);
-			GLabel imageLabel = new GLabel("No Image");
-			imageLabel.setFont(PROFILE_IMAGE_FONT);
-			double xCoorLabel = LEFT_MARGIN + (IMAGE_WIDTH / 2)
-					- (imageLabel.getWidth() / 2);
-			double yCoorLabel = yCoorRect + (IMAGE_HEIGHT / 2)
-					+ (imageLabel.getHeight() / 2);
-			add(imageLabel, xCoorLabel, yCoorLabel);
-		} else {
-			GImage image = profile.getImage();
-			image.scale(IMAGE_WIDTH / image.getWidth(),
-					IMAGE_HEIGHT / image.getHeight());
-			add(image, LEFT_MARGIN, yCoorRect);
-		}
-	}
+	public static final String PROFILE_FRIEND_LABEL_FONT = "Dialog-16-bold";
 
 	/**
-	 * This method displays the status of the current profile. When a status has
-	 * been added, then is it displayed. If no status has been added, then the
-	 * program displays an according message.
+	 * Name of font used to display the names from the user's list of friends in
+	 * a profile
 	 */
-	private GLabel displayStatus(FacePamphletProfile profile, double yCoorRect) {
-		String status = "";
-		if (profile.getStatus().equals("")) {
-			status = "No Current Status";
-		} else {
-			status += profile.getName() + " is " + profile.getStatus();
-		}
-		GLabel statusLabel = new GLabel(status);
-		statusLabel.setFont(PROFILE_STATUS_FONT);
-		double yCoorStatus = yCoorRect + IMAGE_HEIGHT + STATUS_MARGIN;
-		add(statusLabel, LEFT_MARGIN, yCoorStatus);
-		return statusLabel;
-	}
+	public static final String PROFILE_FRIEND_FONT = "Dialog-16";
+
+	/** The width (in pixels) that profile images should be displayed */
+	public static final double IMAGE_WIDTH = 200;
+
+	/** The height (in pixels) that profile images should be displayed */
+	public static final double IMAGE_HEIGHT = 200;
 
 	/**
-	 * This method displays the friend of the current profile. First, a bold
-	 * label that says profile is shown. Next, the names of the current
-	 * profile's friends are shown below, stacked in a column of friends' names.
+	 * The number of pixels in the vertical margin between the bottom of the
+	 * canvas display area and the baseline for the message text that appears
+	 * near the bottom of the display
 	 */
-	private void displayFriends(FacePamphletProfile profile, double yCoorRect) {
-		GLabel friendLabel = new GLabel("Friends: ");
-		friendLabel.setFont(PROFILE_FRIEND_LABEL_FONT);
-		add(friendLabel, getWidth() / 2, yCoorRect);
-		// A counter is used to determine which number friend has been added so
-		// that the Y position of its label may adjust accordingly
-		int counter = 1;
-		Iterator<String> iterator = profile.getFriends();
-		while (iterator.hasNext()) {
-			String nextFriend = iterator.next();
-			GLabel friend = new GLabel(nextFriend);
-			friend.setFont(PROFILE_FRIEND_FONT);
-			// The Y coordinate changes based on the counter so that the names
-			// aren't placed on top of each other
-			add(friend, getWidth() / 2,
-					yCoorRect + (counter * friend.getHeight()));
-			counter++;
-		}
-	}
+	public static final double BOTTOM_MESSAGE_MARGIN = 20;
+
+	/**
+	 * The number of pixels in the hortizontal margin between the left side of
+	 * the canvas display area and the Name, Image, and Status components that
+	 * are display in the profile
+	 */
+	public static final double LEFT_MARGIN = 20;
+
+	/**
+	 * The number of pixels in the vertical margin between the top of the canvas
+	 * display area and the top (NOT the baseline) of the Name component that is
+	 * displayed in the profile
+	 */
+	public static final double TOP_MARGIN = 20;
+
+	/**
+	 * The number of pixels in the vertical margin between the baseline of the
+	 * Name component and the top of the Image displayed in the profile
+	 */
+	public static final double IMAGE_MARGIN = 20;
+
+	/**
+	 * The number of vertical pixels in the vertical margin between the bottom
+	 * of the Image and the top of the Status component in the profile
+	 */
+	public static final double STATUS_MARGIN = 20;
+
 }
